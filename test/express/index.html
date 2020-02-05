@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Module Test Server</title>
+    <base href="/">
+    <meta charset="utf-8">
+    <!-- <link rel="stylesheet" type="text/css" href="dist/<some_css_file>.css"/> -->
+  </head>
+  <body spellcheck="false">
+    <div id="container"></div>
+  </body>
+</html>
+<script defer type="module" src="src/js/module.js"></script>
+<script type="module">
+
+  import * as table from '/src/js/module.js';
+
+  let data = [];
+
+  for (var i = 0; i < 10; i++) {
+    data.push({DATA_DEPTH: 0, ITEM: "Montara FPSO", DESCRIPTION: "Facility"});
+    data.push({DATA_DEPTH: 1, ITEM: "Cargo Oil", DESCRIPTION: "System"});
+    data.push({DATA_DEPTH: 2, ITEM: "33-ZX-012 6C Cargo Oil Tank", DESCRIPTION: "Loop - Tank - 6C Cargo Oil Tank"});
+  }
+
+  let options = {
+    div: "container",
+    data: data,
+    renderer: null,
+    headers: {
+      names: ["Data Depth", "Item", "Description"],
+      renderer: null
+    },
+    rows: {
+      renderer: null,
+    },
+    cells: {
+      onClick: null,
+      onDblClick: null,
+      onHover: null,
+      renderer: null
+    }
+  }
+
+  table.init(options);
+
+</script>

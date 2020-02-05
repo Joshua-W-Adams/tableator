@@ -12,10 +12,10 @@ const sass = require('gulp-sass');
 const minCss = require('gulp-minify-css');
 const concat = require('gulp-concat');
 const webpack = require('webpack-stream');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const rename = require('gulp-rename');
 const eslint = require('gulp-eslint');
 const stylelint = require('gulp-stylelint');
+const express = require('./test/express/express.js');
 
 /* ============================= Configure Modules ========================== */
 
@@ -57,8 +57,7 @@ const paths = {
 function getWebpackCnf (name) {
 	return {
 	  entry: {
-			[name]: paths.inputs.index,
-	    [name + ".min"]: paths.inputs.index
+			[name]: paths.inputs.index
 	  },
 	  devtool: "source-map",
 	  output: {
@@ -66,11 +65,9 @@ function getWebpackCnf (name) {
 	  },
 		externals: {},
 	  optimization: {
-	    minimize: true,
-	    minimizer: [new UglifyJsPlugin({
-	      include: /\.min\.js$/
-	    })]
-	  }
+	    minimize: false
+	  },
+		mode: "production"
 	}
 }
 
@@ -146,6 +143,14 @@ gulp.task('js-no-dep', function (done) {
   return compileJs(entry, cnf, done);
 })
 
+gulp.task('js-min-no-dep', function (done) {
+  var entry = paths.inputs.index,
+			cnf = getWebpackCnf(pkg.name + ".min");
+	cnf.externals = settings.dependancies.js;
+	cnf.optimization = { minimize: true };
+  return compileJs(entry, cnf, done);
+})
+
 gulp.task('js-with-dep', function (done) {
   var entry = paths.inputs.index,
 			cnf = getWebpackCnf(pkg.name + ".full");
@@ -153,6 +158,17 @@ gulp.task('js-with-dep', function (done) {
 		"some-module-1": "someModule1",
 		"./dist/some-module-2.js": "someModule2"
 	};
+  return compileJs(entry, cnf, done);
+})
+
+gulp.task('js-min-with-dep', function (done) {
+  var entry = paths.inputs.index,
+			cnf = getWebpackCnf(pkg.name + ".full.min");
+	cnf.externals = {
+		"some-module-1": "someModule1",
+		"./dist/some-module-2.js": "someModule2"
+	};
+	cnf.optimization = { minimize: true };
   return compileJs(entry, cnf, done);
 })
 
@@ -187,6 +203,7 @@ gulp.task('sasslint', function (done) {
  */
 
  exports.default = function () {
+	 express.init();
    gulp.watch(paths.inputs.sass, gulp.series('sasslint', 'css-no-dep', 'css-with-dep'));
-   gulp.watch(paths.inputs.js, gulp.series('jslint', 'js-no-dep', 'js-with-dep'));
+   gulp.watch(paths.inputs.js, gulp.series('jslint', 'js-no-dep', 'js-min-no-dep', 'js-with-dep', 'js-min-with-dep'));
  };
