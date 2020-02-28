@@ -1,5 +1,5 @@
 {
-  "name": "table",
+  "name": "@joshadams/table.js",
   "version": "1.0.0",
   "description": "A simple JavaScript table component",
   "main": "index.js",
