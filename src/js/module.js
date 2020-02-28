@@ -70,7 +70,7 @@ function _onEvent(tr, td, defaultcb) {
 
 function _tableRenderer() {
   const table = {};
-  table.class = 'table-table';
+  table.className = 'table-table';
   table.style = {};
   table.style.fontFamily = 'Arial';
   table.style.fontSize = '13px';
@@ -83,7 +83,7 @@ function _tableRenderer() {
 
 function _columnRenderer() {
   const col = {};
-  col.class = 'table-table__column';
+  col.className = 'table-table__column';
   col.style = {};
   col.style.height = '48px';
   col.style.width = '200px';
@@ -95,7 +95,7 @@ function _columnRenderer() {
 
 function _rowRenderer() {
   const row = {};
-  row.class = 'table-table__row';
+  row.className = 'table-table__row';
   row.style = {};
   row.style.height = '48px';
   row.style.borderBottom = 'solid 1px #dadce0';
@@ -104,7 +104,7 @@ function _rowRenderer() {
 
 function _cellRenderer() {
   const cell = {};
-  cell.class = 'table-table__cell';
+  cell.className = 'table-table__cell';
   cell.style = {};
   return cell;
 }
