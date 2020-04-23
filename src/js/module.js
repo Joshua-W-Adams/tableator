@@ -71,6 +71,7 @@ function _tableRenderer() {
   table.style.fontFamily = 'roboto';
   table.style.fontSize = '14px';
   table.style.overflow = 'scroll';
+  table.style.width = '100%';
   table.cellSpacing = '0';
   return table;
 }
@@ -208,7 +209,7 @@ function _addHeaders(table, options) {
     const th = _addElement(thead, 'th');
     let width;
     if (cnf.widths) {
-      width = `${cnf.widths[i]}px`;
+      width = cnf.widths[i];
     }
     // apply header styles
     th.width = width;
