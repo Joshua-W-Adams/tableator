@@ -64,19 +64,13 @@ function _onDblClickDefault(tr) {
   }
 }
 
-function _onEvent(tr, td, defaultcb) {
-  defaultcb(tr);
-}
-
 function _tableRenderer() {
   const table = {};
   table.className = 'table-table';
   table.style = {};
-  table.style.fontFamily = 'Arial';
-  table.style.fontSize = '13px';
-  table.style.fontWeight = 500;
+  table.style.fontFamily = 'roboto';
+  table.style.fontSize = '14px';
   table.style.overflow = 'scroll';
-  table.style.margin = '15px';
   table.cellSpacing = '0';
   return table;
 }
@@ -86,7 +80,6 @@ function _columnRenderer() {
   col.className = 'table-table__column';
   col.style = {};
   col.style.height = '48px';
-  col.style.width = '200px';
   col.style.textAlign = 'center';
   col.style.borderBottom = 'solid 1px rgba(218,220,224)';
   col.style.borderTop = 'solid 1px rgba(218,220,224)';
@@ -98,7 +91,6 @@ function _rowRenderer() {
   row.className = 'table-table__row';
   row.style = {};
   row.style.height = '48px';
-  row.style.borderBottom = 'solid 1px #dadce0';
   return row;
 }
 
@@ -106,6 +98,7 @@ function _cellRenderer() {
   const cell = {};
   cell.className = 'table-table__cell';
   cell.style = {};
+  cell.style.borderBottom = 'solid 1px #dadce0';
   return cell;
 }
 
@@ -122,33 +115,64 @@ function _applyRender(element, properties) {
   return element;
 }
 
+function _fileSystemIconLookup() {
+  return {
+    file: '&#128459;',
+    folder: '&#128447;'
+  };
+}
+
+function _iconLookup(rowTypeIcons) {
+  let lookup = {};
+  if (rowTypeIcons === 'filesystem') {
+    lookup = _fileSystemIconLookup();
+  }
+  return lookup;
+}
+
+function _addRowIcons(row, tableCell, rowTypeIcons) {
+  const icon = _addElement(tableCell, 'span');
+  const lookup = _iconLookup(rowTypeIcons);
+  icon.innerHTML = lookup[row.ICON_TYPE] || '';
+  icon.style.padding = '0px 5px 0px 5px';
+  icon.style.color = 'rgba(95,99,104,1)';
+}
+
 function _addCells(tr, data, rowno, options) {
   const cnf = {
-    onClick: options.cells.onClick || _onEvent,
-    onDblClick: options.cells.onDblClick || _onEvent,
-    onHover: options.cells.onHover || _onEvent,
+    onClick: options.cells.onClick || _onClickDefault,
+    onDblClick: options.cells.onDblClick || _onDblClickDefault,
+    onHover: options.cells.onHover || _onHoverDefault,
     renderer: options.cells.renderer || _cellRenderer,
+    rowTypeIcons: options.rows.rowTypeIcons || ''
   };
-  const arr = Object.keys(data);
+  const arr = options.headers.sourceNames || Object.keys(data);
   for (let i = 0; i < arr.length; i++) {
     const prop = arr[i];
     const value = data[prop];
     // add dom element
     const td = _addElement(tr, 'td');
+    if (i === 0) {
+      // add row type icons
+      _addRowIcons(data, td, cnf.rowTypeIcons);
+    }
+    // determine cell alignments
+    const alignments = options.headers.alignment;
+    td.style.textAlign = alignments[i];
     // calculate element css styling with supplied or default renderer
     const render = cnf.renderer(value, rowno, prop);
     // configure element
-    td.innerHTML = value;
+    td.innerHTML = td.innerHTML + value;
     _applyRender(td, render);
     // apply cell functionality
     td.onclick = function onclick() {
-      return cnf.onClick(tr, td, _onClickDefault);
+      return cnf.onClick(tr, td, rowno, data);
     };
     td.ondblclick = function ondblclick() {
-      return cnf.onDblClick(tr, td, _onDblClickDefault);
+      return cnf.onDblClick(tr, td, rowno, data);
     };
     td.onmouseover = function onmouseover() {
-      return cnf.onHover(tr, td, _onHoverDefault);
+      return cnf.onHover(tr, td, rowno, data);
     };
   }
   return tr;
@@ -174,16 +198,26 @@ function _addRows(table, options) {
 function _addHeaders(table, options) {
   const cnf = {
     names: options.headers.names || Object.keys(options.data[0]),
-    renderer: options.headers.renderer || _columnRenderer
+    renderer: options.headers.renderer || _columnRenderer,
+    widths: options.headers.widths,
+    display: options.headers.displayNames || false
   };
   const thead = _addElement(table, 'thead');
   for (let i = 0; i < cnf.names.length; i++) {
     // add element to header
     const th = _addElement(thead, 'th');
+    let width;
+    if (cnf.widths) {
+      width = `${cnf.widths[i]}px`;
+    }
+    // apply header styles
+    th.width = width;
     // calculate element css styling with supplied or default renderer
     const render = cnf.renderer(i);
     // configure element
-    th.innerHTML = cnf.names[i];
+    if (cnf.display) {
+      th.innerHTML = cnf.names[i];
+    }
     _applyRender(th, render);
   }
   return thead;

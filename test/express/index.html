@@ -18,9 +18,9 @@
   let data = [];
 
   for (var i = 0; i < 10; i++) {
-    data.push({DATA_DEPTH: 0, ITEM: "Montara FPSO", DESCRIPTION: "Facility"});
-    data.push({DATA_DEPTH: 1, ITEM: "Cargo Oil", DESCRIPTION: "System"});
-    data.push({DATA_DEPTH: 2, ITEM: "33-ZX-012 6C Cargo Oil Tank", DESCRIPTION: "Loop - Tank - 6C Cargo Oil Tank"});
+    data.push({NAME: "Koalas", LAST_MODIFIED: '2020-04-23', SIZE: "", ICON_TYPE: 'folder'});
+    data.push({NAME: "Crocodiles", LAST_MODIFIED: '2020-04-23', SIZE: "", ICON_TYPE: 'folder'});
+    data.push({NAME: "Kangaroo.jpg", LAST_MODIFIED: '2020-04-23', SIZE: "325 kB", ICON_TYPE: 'file'});
   }
 
   let options = {
@@ -28,11 +28,16 @@
     data: data,
     renderer: null,
     headers: {
-      names: ["Data Depth", "Item", "Description"],
+      displayNames: true,
+      sourceNames: ["NAME", "LAST_MODIFIED", "SIZE"],
+      names: ["Name", "Last Modified", "Size"],
+      widths: [250, 125, 125],
+      alignment: ["left", "center", "center"],
       renderer: null
     },
     rows: {
       renderer: null,
+      rowTypeIcons: 'filesystem'
     },
     cells: {
       onClick: null,
