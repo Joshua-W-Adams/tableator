@@ -1,5 +1,5 @@
 {
-  "name": "@joshadams/table.js",
+  "name": "tableator",
   "version": "1.0.0",
   "description": "A simple JavaScript table component",
   "main": "index.js",
