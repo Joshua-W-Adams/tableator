@@ -10,16 +10,25 @@
 
 /* ================================ Variables =============================== */
 
-let singleClickedRow = {
-  style: {}
-};
-
-let dblClickedRow = {
-  style: {}
-};
-
-let onHoverRow = {
-  style: {}
+const state = {
+  singleClickedRow: {
+    data: {},
+    element: {
+      style: {}
+    }
+  },
+  dblClickedRow: {
+    data: {},
+    element: {
+      style: {}
+    }
+  },
+  onHoverRow: {
+    data: {},
+    element: {
+      style: {}
+    }
+  }
 };
 
 /* ============================= Private Methods ============================ */
@@ -30,37 +39,43 @@ function _addElement(parent, type) {
   return element;
 }
 
-function _onHoverDefault(tr) {
-  if (onHoverRow !== tr) {
+function _onHoverDefault(tr, td, rowno, data) {
+  if (state.onHoverRow.element !== tr) {
     // clear current styling
-    onHoverRow.style.color = '';
-    onHoverRow.style.backgroundColor = '';
+    state.onHoverRow.element.style.color = '';
+    state.onHoverRow.element.style.backgroundColor = '';
     // set new row
-    onHoverRow = tr;
+    state.onHoverRow.element = tr;
     // set default styling
     tr.style.backgroundColor = 'rgba(232,240,254)';
+    // update data
+    state.onHoverRow.data = data;
   }
 }
 
-function _onClickDefault(tr) {
-  if (singleClickedRow !== tr) {
+function _onClickDefault(tr, td, rowno, data) {
+  if (state.singleClickedRow.element !== tr) {
     // clear current styling
-    singleClickedRow.style.color = '';
+    state.singleClickedRow.element.style.color = '';
     // set new row
-    singleClickedRow = tr;
+    state.singleClickedRow.element = tr;
     // set default styling
     tr.style.color = 'rgba(25,103,210)';
+    // update data
+    state.singleClickedRow.data = data;
   }
 }
 
-function _onDblClickDefault(tr) {
-  if (dblClickedRow !== tr) {
+function _onDblClickDefault(tr, td, rowno, data) {
+  if (state.dblClickedRow.element !== tr) {
     // clear current styling
-    dblClickedRow.style.fontWeight = null;
+    state.dblClickedRow.element.style.fontWeight = null;
     // set new row
-    dblClickedRow = tr;
+    state.dblClickedRow.element = tr;
     // set default styling
     tr.style.fontWeight = '600';
+    // update data
+    state.dblClickedRow.data = data;
   }
 }
 
@@ -234,6 +249,9 @@ function _addTable(frag, options) {
 
 /* ============================== Public Methods ============================ */
 
+function getState() {
+  return state;
+}
 
 /**
   * init - constructor for generic table component
@@ -275,5 +293,6 @@ function init(options) {
 /* =========================== Export Public APIs =========================== */
 
 export default {
-  init
+  init,
+  getState
 };
