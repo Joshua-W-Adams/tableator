@@ -28,6 +28,12 @@ const state = {
     element: {
       style: {}
     }
+  },
+  onMouseDownRow: {
+    data: {},
+    element: {
+      style: {}
+    }
   }
 };
 
@@ -50,6 +56,19 @@ function _onHoverDefault(tr, td, rowno, data) {
     tr.style.backgroundColor = 'rgba(232,240,254)';
     // update data
     state.onHoverRow.data = data;
+  }
+}
+
+function _onMouseDownDefault(tr, td, rowno, data) {
+  if (state.onMouseDownRow.element !== tr) {
+    // clear current styling
+    // N/A
+    // set new row
+    state.onMouseDownRow.element = tr;
+    // set default styling
+    // N/A
+    // update data
+    state.onMouseDownRow.data = data;
   }
 }
 
@@ -159,6 +178,7 @@ function _addCells(tr, data, rowno, options) {
     onClick: options.cells.onClick || _onClickDefault,
     onDblClick: options.cells.onDblClick || _onDblClickDefault,
     onHover: options.cells.onHover || _onHoverDefault,
+    onMouseDown: options.cells.onMouseDown || _onMouseDownDefault,
     renderer: options.cells.renderer || _cellRenderer,
     rowTypeIcons: options.rows.rowTypeIcons || ''
   };
@@ -190,6 +210,9 @@ function _addCells(tr, data, rowno, options) {
     td.onmouseover = function onmouseover() {
       return cnf.onHover(tr, td, rowno, data);
     };
+    td.onmousedown = function onmousedown() {
+      return cnf.onMouseDown(tr, td, rowno, data);
+    }
   }
   return tr;
 }
