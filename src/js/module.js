@@ -12,24 +12,28 @@
 
 const state = {
   singleClickedRow: {
+    visualIndex: null,
     data: {},
     element: {
       style: {}
     }
   },
   dblClickedRow: {
+    visualIndex: null,
     data: {},
     element: {
       style: {}
     }
   },
   onHoverRow: {
+    visualIndex: null,
     data: {},
     element: {
       style: {}
     }
   },
   onMouseDownRow: {
+    visualIndex: null,
     data: {},
     element: {
       style: {}
@@ -56,6 +60,8 @@ function _onHoverDefault(tr, td, rowno, data) {
     tr.style.backgroundColor = 'rgba(232,240,254)';
     // update data
     state.onHoverRow.data = data;
+    // update visual index
+    state.onHoverRow.visualIndex = rowno;
   }
 }
 
@@ -69,6 +75,8 @@ function _onMouseDownDefault(tr, td, rowno, data) {
     // N/A
     // update data
     state.onMouseDownRow.data = data;
+    // update visual index
+    state.onMouseDownRow.visualIndex = rowno;
   }
 }
 
@@ -82,6 +90,8 @@ function _onClickDefault(tr, td, rowno, data) {
     tr.style.color = 'rgba(25,103,210)';
     // update data
     state.singleClickedRow.data = data;
+    // update visual index
+    state.singleClickedRow.visualIndex = rowno;
   }
 }
 
@@ -95,6 +105,8 @@ function _onDblClickDefault(tr, td, rowno, data) {
     tr.style.fontWeight = '600';
     // update data
     state.dblClickedRow.data = data;
+    // update visual index
+    state.dblClickedRow.visualIndex = rowno;
   }
 }
 
@@ -212,7 +224,7 @@ function _addCells(tr, data, rowno, options) {
     };
     td.onmousedown = function onmousedown() {
       return cnf.onMouseDown(tr, td, rowno, data);
-    }
+    };
   }
   return tr;
 }
